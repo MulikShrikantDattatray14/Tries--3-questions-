@@ -1,0 +1,106 @@
+Problem Description:-
+
+Given a list of N words, find the shortest unique prefix to represent each word in the list.
+
+NOTE: Assume that no word is the prefix of another. In other words, the representation is always possible
+
+
+
+Problem Constraints
+1 <= Sum of length of all words <= 106
+
+
+
+Input Format
+First and only argument is a string array of size N.
+
+
+
+Output Format
+Return a string array B where B[i] denotes the shortest unique prefix to represent the ith word.
+
+
+
+Example Input
+Input 1:
+
+ A = ["zebra", "dog", "duck", "dove"]
+Input 2:
+
+A = ["apple", "ball", "cat"]
+
+
+Example Output
+Output 1:
+
+ ["z", "dog", "du", "dov"]
+Output 2:
+
+ ["a", "b", "c"]
+
+
+Example Explanation
+Explanation 1:
+
+ Shortest unique prefix of each word is:
+ For word "zebra", we can only use "z" as "z" is not any prefix of any other word given.
+ For word "dog", we have to use "dog" as "d" and "do" are prefixes of "dov".
+ For word "du", we have to use "du" as "d" is prefix of "dov" and "dog".
+ For word "dov", we have to use "dov" as "d" and do" are prefixes of "dog".  
+ 
+Explanation 2:
+
+ "a", "b" and c" are not prefixes of any other word. So, we can use of first letter of each to represent.
+
+ ==============================================================================================================================================================================================================================
+
+ class Tries {
+    constructor() {
+        this.hm = new Map();
+        this.count = 0;
+    }
+}
+function insert(curr, str) {
+    // curr is the root
+    for (let i = 0; i < str.length; i++) {
+        const ch = str.charAt(i);
+        if (!curr.hm.has(ch)) {
+            const t = new Tries();
+            curr.hm.set(ch, t);
+        }
+        // move ahead
+        curr = curr.hm.get(ch);
+        curr.count++;
+    }
+
+}
+function search(root, s) {
+    let sb = "";
+    for (let i = 0; i < s.length; i++) {
+        let c = s.charAt(i);
+        root = root.hm.get(c);
+        if (root.count > 1) sb += c;
+        else if (root.count == 1) {
+            sb += c;
+            break;
+        }
+
+    }
+    return sb;
+
+}
+
+let A = ["zebra", "dog", "duck", "dove"]// ["z", "dog", "du", "dov"]
+let ans = prefix(A)
+console.log(ans)
+function prefix(A) {
+    let pre = new Array(A.length);
+    let root = new Tries();
+    for (let s of A) insert(root, s);
+    for (let i = 0; i < A.length; i++) {
+        pre[i] = search(root, A[i]);
+    }
+    return pre;
+}
+
+=================================================================================================================================================================================================================================
